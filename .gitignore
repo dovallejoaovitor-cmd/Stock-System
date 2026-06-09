@@ -1,0 +1,18 @@
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# Arquivo de configuração do banco
+db.properties
+
+# Logs
+*.log
+
+# Arquivos compilados
+*.class
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
