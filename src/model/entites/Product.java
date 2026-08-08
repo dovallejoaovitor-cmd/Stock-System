@@ -7,18 +7,21 @@ public class Product {
 	private Category category;
 	private Double price;
 	private Integer quantity;
+	private User user;
 	
 	public Product() {
 		
 	}
 	
-	public Product(Integer id, String name, Category category, Double price, Integer quantity) {
+	public Product(Integer id, String name, Category category, Double price, Integer quantity, User user) {
 
 		this.id = id;
 		this.name = name;
 		this.category = category;
 		this.price = price;
 		this.quantity = quantity;
+		this.user = user;
+		
 	}
 
 	public Integer getId() {
@@ -59,6 +62,14 @@ public class Product {
 
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	

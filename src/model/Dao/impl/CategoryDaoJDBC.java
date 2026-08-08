@@ -56,7 +56,7 @@ public class CategoryDaoJDBC implements CategoryDao{
 		try {
 			ps = conn.prepareStatement(
 					"UPDATE category "+
-					"SET categoryName = ?" +
+					"SET categoryName = ? " +
 					"WHERE id = ?", Statement.RETURN_GENERATED_KEYS
 			);
 			ps.setString(1, category.getName());
@@ -80,6 +80,8 @@ public class CategoryDaoJDBC implements CategoryDao{
 					"DELETE FROM category " + 
 					"WHERE id = ?", Statement.RETURN_GENERATED_KEYS
 					);
+			ps.setInt(1, id);
+			ps.execute();
 		}catch(SQLException e) {
 			throw new DbException(e.getMessage());
 		}finally {
@@ -94,7 +96,7 @@ public class CategoryDaoJDBC implements CategoryDao{
 		ResultSet rs = null;
 		try {
 			ps = conn.prepareStatement(
-					"SELECT categoryName FROM category " +
+					"SELECT id, categoryName FROM category " +
 					"WHERE id = ?"				
 					);
 			ps.setInt(1, id);
@@ -119,7 +121,7 @@ public class CategoryDaoJDBC implements CategoryDao{
 		ResultSet rs = null;
 		try {
 			ps = conn.prepareStatement(
-					"SELECT categoryName FROM category " +
+					"SELECT id, categoryName FROM category " +
 					"ORDER by category.id"
 					);
 			rs = ps.executeQuery();
