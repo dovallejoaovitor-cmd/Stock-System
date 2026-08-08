@@ -12,6 +12,7 @@ import db.DB;
 import db.DbException;
 import model.Dao.CategoryDao;
 import model.entites.Category;
+import model.entites.User;
 
 public class CategoryDaoJDBC implements CategoryDao{
 
@@ -23,16 +24,15 @@ public class CategoryDaoJDBC implements CategoryDao{
 	}
 
 	@Override
-	public void insert(Category category) {
+	public void insert(Category category, User user) {
 		PreparedStatement ps = null;
 		
 		try {
 			ps = conn.prepareStatement(
-					"INSERT INTO category " +
-					"(categoryName) VALUES " +
-					"(?); ", Statement.RETURN_GENERATED_KEYS
+					 "INSERT INTO category (categoryName, userId) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS
 					);
 			ps.setString(1, category.getName());
+			ps.setInt(2, user.getId());
 			int rowsAffected = ps.executeUpdate();
 			if (rowsAffected > 0) {
 				ResultSet rs = ps.getGeneratedKeys();
@@ -96,8 +96,9 @@ public class CategoryDaoJDBC implements CategoryDao{
 		ResultSet rs = null;
 		try {
 			ps = conn.prepareStatement(
-					"SELECT id, categoryName FROM category " +
-					"WHERE id = ?"				
+					"SELECT id, categoryName, userId " +
+		                    "FROM category " +
+		                    "WHERE id = ?"			
 					);
 			ps.setInt(1, id);
 			rs = ps.executeQuery();
@@ -116,38 +117,52 @@ public class CategoryDaoJDBC implements CategoryDao{
 	}
 
 	@Override
-	public List<Category> findAll() {
-		PreparedStatement ps = null; 
-		ResultSet rs = null;
-		try {
-			ps = conn.prepareStatement(
-					"SELECT id, categoryName FROM category " +
-					"ORDER by category.id"
-					);
-			rs = ps.executeQuery();
-			List<Category> list = new ArrayList<>();
-			
+	public List<Category> findAll(User user) {
+
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    try {
+
+	        ps = conn.prepareStatement(
+	                "SELECT id, categoryName, userId " +
+	                "FROM category " +
+	                "WHERE userId = ? " +
+	                "ORDER BY id"
+	        );
+
+	        ps.setInt(1, user.getId());
+
+	        rs = ps.executeQuery();
+
+	        List<Category> list = new ArrayList<>();
+
 	        while (rs.next()) {
-	            list.add(instantiateCategory(rs));
+	            list.add(instantiateCategory(rs)
+	            );
 	        }
-
 	        return list;
+	    } catch (SQLException e) {
 
-		}catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}finally {
-			DB.closeStatement(ps);
-			DB.closeResultSet(rs);
-		}
-		
+	        throw new DbException(e.getMessage()
+	        );
+
+	    }finally{
+	        DB.closeStatement(ps);
+	        DB.closeResultSet(rs);
+	    }
 	}
 	
 	private Category instantiateCategory(ResultSet rs) {
 		try {
 			Category cat = new Category();
+			User user = new User();
 			cat.setId(rs.getInt("id"));
 			cat.setName(rs.getString("categoryName"));
+			user.setId(rs.getInt("userId"));
+			cat.setUser(user);
 			return cat;
+			
 		}catch(SQLException e) {
 			throw new DbException(e.getMessage());
 		}

@@ -21,11 +21,13 @@ import javax.swing.border.EmptyBorder;
 
 import model.Dao.CategoryDao;
 import model.entites.Category;
+import model.entites.User;
 
 public class CategoryPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
+    private final User currentUser;
     private final CategoryDao categoryDao;
     private final CategoryListener listener;
 
@@ -37,10 +39,16 @@ public class CategoryPanel extends JPanel {
 
     public CategoryPanel(
             CategoryDao categoryDao,
-            CategoryListener listener) {
+            CategoryListener listener,
+            User currentUser) {
 
-        this.categoryDao = categoryDao;
+        this.currentUser = currentUser;
+		this.categoryDao = categoryDao;
         this.listener = listener;
+        
+        System.out.println(
+        	    "CATEGORY PANEL - ID DO USER: " + currentUser.getId()
+        	);
 
         setLayout(new BorderLayout(0, 18));
         setBackground(new Color(245, 247, 250));
@@ -218,7 +226,7 @@ public class CategoryPanel extends JPanel {
         try {
 
             List<Category> categories =
-                    categoryDao.findAll();
+                    categoryDao.findAll(currentUser);
 
             for (Category category : categories) {
 
@@ -261,7 +269,7 @@ public class CategoryPanel extends JPanel {
             );
 
             categoryDao.insert(
-                    category
+                    category, currentUser
             );
 
             reload();

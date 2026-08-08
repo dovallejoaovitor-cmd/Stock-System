@@ -38,6 +38,10 @@ public class MainFrame extends JFrame {
             ProductDao productDao,
             StockMovementDao stockMovementDao,
             User currentUser) {
+    	
+    	 System.out.println(
+    		        "MAIN FRAME - ID DO USER: " + currentUser.getId()
+    		    );
 
         setTitle("StockSystem");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,10 +56,11 @@ public class MainFrame extends JFrame {
                 currentUser,
                 () -> cardLayout.show(content, "categories")
         );
-
+        
         categoryPanel = new CategoryPanel(
                 categoryDao,
-                category -> openCategory(category)
+                category -> openCategory(category),
+                currentUser
         );
 
         buildInterface();

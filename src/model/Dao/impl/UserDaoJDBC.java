@@ -152,8 +152,12 @@ PreparedStatement ps = null;
 			ps.setString(1, email);
 			rs = ps.executeQuery();
 			if(rs.next()) {
-				User user = instantiateUser(rs);
-				return user;
+				System.out.println("ID VINDO DO BANCO: " + rs.getInt("id"));
+
+			    User user = instantiateUser(rs);
+
+			    System.out.println("ID DO USER CRIADO: " + user.getId());
+			    return user;
 			}
 		}catch(SQLException e) {
 			throw new DbException(e.getMessage());

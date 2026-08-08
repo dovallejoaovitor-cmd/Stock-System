@@ -320,6 +320,10 @@ public class LoginFrame extends JFrame {
                 return;
             }
 
+            System.out.println(
+            	    "LOGIN - ID: " + user.getId()
+            	);
+            
             MainFrame mainFrame =
                     new MainFrame(
                             categoryDao,

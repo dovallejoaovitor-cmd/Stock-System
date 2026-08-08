@@ -86,6 +86,7 @@ public class ProductDaoJDBC implements ProductDao{
 						"DELETE FROM product " + 
 						"WHERE id = ?", Statement.RETURN_GENERATED_KEYS
 						);
+				ps.setInt(1, id);
 				ps.execute();
 			}catch(SQLException e) {
 				throw new DbException(e.getMessage());
